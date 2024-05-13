@@ -16,11 +16,7 @@ function HeroSection() {
 
     return (
         <div className=''>
-            <div className="mt-4 flex justify-end m-4">
-                <input type="text" placeholder="Search for Dishes and Restaurants" className="shadow-lg mx-2 px-6 rounded-lg w-1/4" />
-                <button className="p-2 px-4 bg-blue-600 text-white rounded-md ml-4">Search</button>
-            </div>
-            <div>
+            <div className='mt-6'>
                 <video ref={videoRef} poster="https://www.foodpanda.com/wp-content/uploads/2023/03/fp-home-video-poster.jpg" className="bg-video__content h-[450px] w-full object-cover" autoPlay muted loop>
                     <source src="https://player.vimeo.com/progressive_redirect/playback/887673049/rendition/1080p/file.mp4?loc=external&log_user=0&signature=d2fb16e953bceb3394adfc2bdb6da0705e4fcfd9e7e60047193939fd2a7a7e46" type="video/mp4"/>
                 </video>
@@ -33,6 +29,7 @@ function HeroSection() {
                 </div>
             </div>
             </div>
+        
     );
 }
 
