@@ -7,15 +7,14 @@ interface Restaurant {
     name: string;
     areaName: string;
     avgRatingString: number;
-    costForTwo:number;
-    cloudinaryImageId:string;
-    cuisines:string;
-  }
+    costForTwo: number;
+    cloudinaryImageId: string;
+    cuisines: string[];
+  };
 }
 
- 
-function filterData(searchInput:string, restaurants:any) {
-  const filteredData = restaurants.filter((restaurant:any) =>
+function filterData(searchInput: string, restaurants: Restaurant[]) {
+  const filteredData = restaurants.filter((restaurant) =>
     restaurant.info.name.toLowerCase().includes(searchInput.toLowerCase())
   );
   return filteredData;
@@ -32,9 +31,10 @@ function RestrauantCard() {
         const response = await axios.get(
           "https://foodfire.onrender.com/api/restaurants?lat=21.1702401&lng=72.83106070000001&page_type=DESKTOP_WEB_LISTING"
         );
-        const restaurants: Restaurant[] = response?.data?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants;
+        const restaurants: Restaurant[] =
+          response?.data?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants;
         setRestaurantData(restaurants);
-        setFilteredRestaurants(restaurants)
+        setFilteredRestaurants(restaurants);
       } catch (error) {
         console.error("Error fetching restaurant data:", error);
       }
@@ -48,17 +48,17 @@ function RestrauantCard() {
 
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(e.target.value);
-    const data = filterData(e.target.value, restaurantData);
+    const data = filterData(e.target.value, restaurantData || []);
     setFilteredRestaurants(data);
   };
 
   const handleSearchButtonClick = () => {
-    const data = filterData(searchInput, restaurantData);
+    const data = filterData(searchInput, restaurantData || []);
     setFilteredRestaurants(data);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSearchButtonClick();
     }
   };
@@ -95,18 +95,31 @@ function RestrauantCard() {
         </div>
         <div className="grid grid-cols-4 gap-8  justify-evenly ">
           {filteredRestaurants.map((restaurant, index) => (
-            <div key={index} className="cursor-pointer p-6 m-8 border-2  w-64 md:w-[330px] h-full rounded-lg shadow-lg hover:shadow-2xl hover:bg-gray-300 hover:scale-110 transition-transform duration-300 text-slate-800  ">
+            <div
+              key={index}
+              className="relative cursor-pointer p-6 m-8 border-2  w-64 md:w-[330px] h-full rounded-lg shadow-lg overflow-hidden group transition-transform duration-300"
+            >
               <img
-                className="w-[100%] h-[180px] object-cover"
+                className="w-[100%] h-[180px] object-cover group-hover:-translate-y-2 transition-transform duration-300 ease-in-out delay-200"
                 src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_1024/${restaurant.info.cloudinaryImageId}`}
                 alt=""
               />
-              <div className="mt-3">
-                <h3 className="text-lg font-semibold my-3">{restaurant.info.name}</h3>
-                {restaurant.info.cuisines.join(", ")}
-                <h4 className="my-1"><span>&#x1F4CD;</span> {restaurant.info.areaName}</h4>
-                <h4 className="my-1">{restaurant.info.avgRatingString} ⭐️   </h4>
+               <h2 className="text-lg font-serif font-semibold my-3 ">{restaurant.info.name}</h2>
+                <h3 className="font-semibold  text-gradient ">{restaurant.info.cuisines.join(", ")}</h3>
+                <h4 className="my-1 ">
+                  <span>&#x1F4CD;</span> {restaurant.info.areaName}
+                </h4>
+              <div className="absolute font-extrabold bottom-0 left-0  w-full bg-gradient-to-t from-blue-800 to-transparent p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out delay-5000">
+                <h3 className="text-lg  font-semibold my-3 ">{restaurant.info.name}</h3>
+                <p className="">{restaurant.info.cuisines.join(", ")}</p>
+                <h4 className="my-1 ">
+                  <span>&#x1F4CD;</span> {restaurant.info.areaName}
+                </h4>
+                <h4 className="my-1 ">{restaurant.info.avgRatingString} ⭐️ </h4>
                 <h4 className="my-1">{restaurant.info.costForTwo}</h4>
+                <button className="bg-white text-blue-500 px-4 py-2 mt-2 rounded-md ">
+                  Order Now
+                </button>
               </div>
             </div>
           ))}
